@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Send, Mail, Phone, MapPin, Loader2 } from "lucide-react";
+import { Send, Mail, Phone, MapPin, Loader2, Sparkles, MessageSquare } from "lucide-react";
 import { z } from "zod";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -20,8 +20,10 @@ const contactSchema = z.object({
 
 const ContactSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
+  const inputsRef = useRef<(HTMLDivElement | null)[]>([]);
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -34,39 +36,133 @@ const ContactSection = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Form animation
+      // Title animation
       gsap.fromTo(
-        formRef.current,
-        { opacity: 0, x: -60 },
+        titleRef.current,
+        { opacity: 0, y: 100, scale: 0.9 },
         {
           opacity: 1,
-          x: 0,
-          duration: 1,
-          ease: "power3.out",
+          y: 0,
+          scale: 1,
+          duration: 1.2,
+          ease: "power4.out",
           scrollTrigger: {
-            trigger: formRef.current,
-            start: "top 80%",
+            trigger: titleRef.current,
+            start: "top 85%",
             toggleActions: "play none none reverse",
           },
         }
       );
 
-      // Info animation
+      // Form animation with dramatic slide
       gsap.fromTo(
-        infoRef.current,
-        { opacity: 0, x: 60 },
+        formRef.current,
+        { opacity: 0, x: -150, rotateY: 20 },
         {
           opacity: 1,
           x: 0,
-          duration: 1,
-          ease: "power3.out",
+          rotateY: 0,
+          duration: 1.2,
+          ease: "power4.out",
           scrollTrigger: {
-            trigger: infoRef.current,
-            start: "top 80%",
+            trigger: formRef.current,
+            start: "top 85%",
             toggleActions: "play none none reverse",
           },
         }
       );
+
+      // Form inputs stagger animation
+      inputsRef.current.forEach((input, i) => {
+        if (!input) return;
+        gsap.fromTo(
+          input,
+          { opacity: 0, y: 40, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: "back.out(2)",
+            scrollTrigger: {
+              trigger: formRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+            delay: i * 0.1 + 0.3,
+          }
+        );
+      });
+
+      // Info animation with dramatic slide
+      gsap.fromTo(
+        infoRef.current,
+        { opacity: 0, x: 150, rotateY: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          rotateY: 0,
+          duration: 1.2,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: infoRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      // Contact info items animation
+      const infoItems = infoRef.current?.querySelectorAll(".contact-item");
+      infoItems?.forEach((item, i) => {
+        gsap.fromTo(
+          item,
+          { opacity: 0, x: 50, scale: 0.9 },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: "back.out(1.5)",
+            scrollTrigger: {
+              trigger: infoRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+            delay: i * 0.15 + 0.3,
+          }
+        );
+
+        // Hover animation
+        item.addEventListener("mouseenter", () => {
+          gsap.to(item, {
+            x: -10,
+            scale: 1.02,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+          gsap.to(item.querySelector(".contact-icon"), {
+            scale: 1.2,
+            rotation: 10,
+            duration: 0.3,
+          });
+        });
+
+        item.addEventListener("mouseleave", () => {
+          gsap.to(item, {
+            x: 0,
+            scale: 1,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+          gsap.to(item.querySelector(".contact-icon"), {
+            scale: 1,
+            rotation: 0,
+            duration: 0.3,
+          });
+        });
+      });
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -117,7 +213,13 @@ const ContactSection = () => {
       gsap.fromTo(
         formRef.current,
         { scale: 1 },
-        { scale: 1.02, duration: 0.2, yoyo: true, repeat: 1 }
+        { 
+          scale: 1.02, 
+          duration: 0.2, 
+          yoyo: true, 
+          repeat: 3,
+          ease: "power2.inOut",
+        }
       );
     } catch (error) {
       console.error("Error sending email:", error);
@@ -135,18 +237,23 @@ const ContactSection = () => {
     <section
       ref={sectionRef}
       id="contact"
-      className="py-24 relative overflow-hidden"
+      className="py-32 relative overflow-hidden"
+      style={{ perspective: "1000px" }}
     >
       {/* Background effects */}
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[150px]" />
-      <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-primary/10 rounded-full blur-[100px]" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[180px]" />
+      <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[150px]" />
 
-      <div className="container px-4">
-        <div className="text-center mb-16">
-          <span className="text-primary text-sm font-medium tracking-wider uppercase mb-4 block">
-            צור קשר
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6">
+      <div className="container px-4 relative z-10">
+        <div ref={titleRef} className="text-center mb-20">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+            <span className="text-primary text-sm font-medium tracking-wider uppercase">
+              צור קשר
+            </span>
+            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold mb-6">
             בוא <span className="text-gradient">נדבר</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -159,9 +266,15 @@ const ContactSection = () => {
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="glass rounded-2xl p-8 gradient-border space-y-6"
+            className="glass rounded-3xl p-8 md:p-10 gradient-border space-y-6"
+            style={{ transformStyle: "preserve-3d" }}
           >
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="flex items-center gap-2 mb-4">
+              <MessageSquare className="w-5 h-5 text-primary" />
+              <span className="font-semibold">שלח לי הודעה</span>
+            </div>
+            
+            <div ref={(el) => (inputsRef.current[0] = el)} className="grid sm:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="name" className="text-sm font-medium mb-2 block">
                   שם מלא
@@ -172,7 +285,7 @@ const ContactSection = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="השם שלך"
-                  className="bg-muted/50 border-border/50 focus:border-primary transition-colors"
+                  className="bg-muted/50 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 h-12 rounded-xl"
                   required
                 />
               </div>
@@ -187,13 +300,13 @@ const ContactSection = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="example@email.com"
-                  className="bg-muted/50 border-border/50 focus:border-primary transition-colors"
+                  className="bg-muted/50 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 h-12 rounded-xl"
                   required
                 />
               </div>
             </div>
 
-            <div>
+            <div ref={(el) => (inputsRef.current[1] = el)}>
               <label htmlFor="phone" className="text-sm font-medium mb-2 block">
                 טלפון
               </label>
@@ -204,12 +317,12 @@ const ContactSection = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="050-0000000"
-                className="bg-muted/50 border-border/50 focus:border-primary transition-colors"
+                className="bg-muted/50 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 h-12 rounded-xl"
                 required
               />
             </div>
 
-            <div>
+            <div ref={(el) => (inputsRef.current[2] = el)}>
               <label htmlFor="message" className="text-sm font-medium mb-2 block">
                 הודעה
               </label>
@@ -220,33 +333,35 @@ const ContactSection = () => {
                 onChange={handleChange}
                 placeholder="ספר לי על הפרויקט שלך..."
                 rows={5}
-                className="bg-muted/50 border-border/50 focus:border-primary transition-colors resize-none"
+                className="bg-muted/50 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 resize-none rounded-xl"
                 required
               />
             </div>
 
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              size="lg"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-lg font-semibold rounded-xl glow transition-all duration-300 hover:scale-[1.02]"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-5 h-5 ml-2 animate-spin" />
-                  שולח...
-                </>
-              ) : (
-                <>
-                  <Send className="w-5 h-5 ml-2" />
-                  שלח הודעה
-                </>
-              )}
-            </Button>
+            <div ref={(el) => (inputsRef.current[3] = el)}>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                size="lg"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-7 text-lg font-semibold rounded-2xl glow transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/50"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 ml-2 animate-spin" />
+                    שולח...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-5 h-5 ml-2" />
+                    שלח הודעה
+                  </>
+                )}
+              </Button>
+            </div>
           </form>
 
           {/* Contact info */}
-          <div ref={infoRef} className="flex flex-col justify-center">
+          <div ref={infoRef} className="flex flex-col justify-center" style={{ transformStyle: "preserve-3d" }}>
             <h3 className="text-2xl font-display font-bold mb-6">
               דרכים נוספות ליצור קשר
             </h3>
@@ -255,49 +370,49 @@ const ContactSection = () => {
             </p>
 
             <div className="space-y-6">
-              <div className="flex items-center gap-4 group">
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <Mail className="w-6 h-6 text-primary" />
+              <div className="contact-item flex items-center gap-4 group cursor-pointer">
+                <div className="contact-icon w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 shadow-lg">
+                  <Mail className="w-7 h-7 text-primary" />
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">אימייל</div>
+                  <div className="text-sm text-muted-foreground mb-1">אימייל</div>
                   <a
                     href="mailto:yarinhazan395@gmail.com"
-                    className="text-lg font-medium hover:text-primary transition-colors"
+                    className="text-lg font-semibold hover:text-primary transition-colors"
                   >
                     yarinhazan395@gmail.com
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 group">
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <Phone className="w-6 h-6 text-primary" />
+              <div className="contact-item flex items-center gap-4 group cursor-pointer">
+                <div className="contact-icon w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 shadow-lg">
+                  <Phone className="w-7 h-7 text-primary" />
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">טלפון</div>
-                  <div className="text-lg font-medium">זמין לשיחה</div>
+                  <div className="text-sm text-muted-foreground mb-1">טלפון</div>
+                  <div className="text-lg font-semibold">זמין לשיחה</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 group">
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <MapPin className="w-6 h-6 text-primary" />
+              <div className="contact-item flex items-center gap-4 group cursor-pointer">
+                <div className="contact-icon w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 shadow-lg">
+                  <MapPin className="w-7 h-7 text-primary" />
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">מיקום</div>
-                  <div className="text-lg font-medium">ישראל</div>
+                  <div className="text-sm text-muted-foreground mb-1">מיקום</div>
+                  <div className="text-lg font-semibold">ישראל</div>
                 </div>
               </div>
             </div>
 
             {/* Decorative element */}
-            <div className="mt-12 p-6 glass rounded-2xl gradient-border">
+            <div className="mt-12 p-6 glass rounded-2xl gradient-border group hover:scale-[1.02] transition-transform duration-300">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                <span className="font-medium">זמין לפרויקטים חדשים</span>
+                <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50" />
+                <span className="font-semibold text-lg">זמין לפרויקטים חדשים</span>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground">
                 בדרך כלל אני מגיב תוך 24 שעות. בוא נדבר על הפרויקט שלך!
               </p>
             </div>
