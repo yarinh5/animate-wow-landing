@@ -91,14 +91,6 @@ const HeroSection = ({ onContactClick }: HeroSectionProps) => {
             delay: i * 0.1,
           });
 
-          // Pulsing glow effect
-          gsap.to(particle, {
-            boxShadow: "0 0 20px hsl(var(--primary))",
-            duration: gsap.utils.random(1, 2),
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-          });
         });
       }
 
@@ -167,7 +159,6 @@ const HeroSection = ({ onContactClick }: HeroSectionProps) => {
             gsap.to(char, {
               y: -20,
               scale: 1.3,
-              color: "hsl(var(--primary))",
               duration: 0.3,
               ease: "power2.out",
             });
@@ -176,7 +167,6 @@ const HeroSection = ({ onContactClick }: HeroSectionProps) => {
             gsap.to(char, {
               y: 0,
               scale: 1,
-              color: "inherit",
               duration: 0.3,
               ease: "power2.out",
             });
