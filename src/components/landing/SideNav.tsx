@@ -41,8 +41,8 @@ const SideNav = () => {
 
   return (
     <nav
-      className={`fixed left-4 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 transition-all duration-500 ${
-        visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8 pointer-events-none"
+      className={`fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 transition-all duration-500 ${
+        visible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8 pointer-events-none"
       }`}
     >
       {sections.map((section) => (
@@ -52,7 +52,7 @@ const SideNav = () => {
           className="group relative flex items-center gap-3"
           aria-label={section.label}
         >
-          <span className="absolute right-8 whitespace-nowrap text-sm font-medium text-foreground/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-card/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-border/50">
+          <span className="absolute left-8 whitespace-nowrap text-sm font-medium text-foreground/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-card/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-border/50">
             {section.label}
           </span>
           <div
