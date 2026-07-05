@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { Code, Globe, Zap, Users, ArrowLeft, Sparkles } from "lucide-react";
+import { TextScramble } from "@/components/landing/TextScramble";
 
 gsap.registerPlugin(ScrollTrigger);
 
