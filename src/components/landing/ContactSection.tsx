@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Send, Mail, Phone, MapPin, Loader2, Sparkles, MessageSquare } from "lucide-react";
 import { z } from "zod";
+import { TextScramble } from "@/components/landing/TextScramble";
 
 gsap.registerPlugin(ScrollTrigger);
 
