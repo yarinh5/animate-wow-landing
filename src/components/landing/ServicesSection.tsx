@@ -232,9 +232,7 @@ const ServicesSection = ({ onContactClick }: ServicesSectionProps) => {
         <div ref={titleRef} className="text-center mb-20">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-            <span className="text-primary text-sm font-medium tracking-wider uppercase">
-              השירותים שלי
-            </span>
+            <TextScramble text="השירותים שלי" className="text-primary text-sm font-medium tracking-wider uppercase" duration={0.8} />
             <Sparkles className="w-5 h-5 text-primary animate-pulse" />
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold mb-6">
