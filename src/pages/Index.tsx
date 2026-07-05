@@ -6,6 +6,8 @@ import AboutSection from "@/components/landing/AboutSection";
 import PortfolioSection from "@/components/landing/PortfolioSection";
 import ContactSection from "@/components/landing/ContactSection";
 import Footer from "@/components/landing/Footer";
+import ScrollProgress from "@/components/landing/ScrollProgress";
+import SideNav from "@/components/landing/SideNav";
 import Preloader from "@/components/landing/Preloader";
 import CustomCursor from "@/components/landing/CustomCursor";
 import SmoothScroll from "@/components/landing/SmoothScroll";
