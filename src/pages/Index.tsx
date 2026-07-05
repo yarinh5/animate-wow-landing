@@ -8,6 +8,7 @@ import ContactSection from "@/components/landing/ContactSection";
 import Footer from "@/components/landing/Footer";
 import ScrollProgress from "@/components/landing/ScrollProgress";
 import SideNav from "@/components/landing/SideNav";
+import FloatingShapes from "@/components/landing/FloatingShapes";
 import Preloader from "@/components/landing/Preloader";
 import CustomCursor from "@/components/landing/CustomCursor";
 import SmoothScroll from "@/components/landing/SmoothScroll";
