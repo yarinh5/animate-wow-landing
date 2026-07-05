@@ -31,6 +31,7 @@ const Index = () => {
       <SmoothScroll />
       <ScrollProgress />
       <SideNav />
+      <FloatingShapes />
       <div className="min-h-screen bg-background text-foreground overflow-x-hidden" dir="rtl">
         <Navbar onContactClick={scrollToContact} />
         <HeroSection onContactClick={scrollToContact} />
