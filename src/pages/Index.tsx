@@ -28,6 +28,8 @@ const Index = () => {
       {loading && <Preloader onComplete={() => setLoading(false)} />}
       <CustomCursor />
       <SmoothScroll />
+      <ScrollProgress />
+      <SideNav />
       <div className="min-h-screen bg-background text-foreground overflow-x-hidden" dir="rtl">
         <Navbar onContactClick={scrollToContact} />
         <HeroSection onContactClick={scrollToContact} />
