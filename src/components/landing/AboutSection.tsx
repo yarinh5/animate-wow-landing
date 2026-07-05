@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { Award, Clock, CheckCircle, Rocket, Star, Sparkles } from "lucide-react";
+import { TextScramble } from "@/components/landing/TextScramble";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -201,9 +202,7 @@ const AboutSection = ({ onContactClick }: AboutSectionProps) => {
           <div ref={contentRef} className="order-2 lg:order-1" style={{ transformStyle: "preserve-3d" }}>
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-              <span className="text-primary text-sm font-medium tracking-wider uppercase">
-                קצת עליי
-              </span>
+              <TextScramble text="קצת עליי" className="text-primary text-sm font-medium tracking-wider uppercase" duration={0.8} />
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6">
               מביא את <span className="text-gradient">החזון שלך</span> לחיים

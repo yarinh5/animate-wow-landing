@@ -6,6 +6,9 @@ import AboutSection from "@/components/landing/AboutSection";
 import PortfolioSection from "@/components/landing/PortfolioSection";
 import ContactSection from "@/components/landing/ContactSection";
 import Footer from "@/components/landing/Footer";
+import ScrollProgress from "@/components/landing/ScrollProgress";
+import SideNav from "@/components/landing/SideNav";
+import FloatingShapes from "@/components/landing/FloatingShapes";
 import Preloader from "@/components/landing/Preloader";
 import CustomCursor from "@/components/landing/CustomCursor";
 import SmoothScroll from "@/components/landing/SmoothScroll";
@@ -26,6 +29,9 @@ const Index = () => {
       {loading && <Preloader onComplete={() => setLoading(false)} />}
       <CustomCursor />
       <SmoothScroll />
+      <ScrollProgress />
+      <SideNav />
+      <FloatingShapes />
       <div className="min-h-screen bg-background text-foreground overflow-x-hidden" dir="rtl">
         <Navbar onContactClick={scrollToContact} />
         <HeroSection onContactClick={scrollToContact} />
