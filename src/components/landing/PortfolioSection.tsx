@@ -228,9 +228,7 @@ const PortfolioSection = ({ onContactClick }: PortfolioSectionProps) => {
         <div ref={titleRef} className="text-center mb-20">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-            <span className="text-primary text-sm font-medium tracking-wider uppercase">
-              תיק עבודות
-            </span>
+            <TextScramble text="תיק עבודות" className="text-primary text-sm font-medium tracking-wider uppercase" duration={0.8} />
             <Sparkles className="w-5 h-5 text-primary animate-pulse" />
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold mb-6">
