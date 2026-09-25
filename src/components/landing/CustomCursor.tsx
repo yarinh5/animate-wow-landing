@@ -6,15 +6,20 @@ const CustomCursor = () => {
   const [hovering, setHovering] = useState(false);
   const [visible, setVisible] = useState(false);
 
+  const [enabled] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches
+  );
+
   useEffect(() => {
-    // Skip on touch devices
-    if (window.matchMedia("(hover: none)").matches) return;
+    // Desktop mouse only — never runs on touch devices
+    if (!enabled) return;
 
     let mouseX = 0;
     let mouseY = 0;
     let ringX = 0;
     let ringY = 0;
     let rafId: number;
+    let shown = false;
 
     const onMove = (e: MouseEvent) => {
       mouseX = e.clientX;
@@ -22,7 +27,10 @@ const CustomCursor = () => {
       if (dotRef.current) {
         dotRef.current.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
       }
-      if (!visible) setVisible(true);
+      if (!shown) {
+        shown = true;
+        setVisible(true);
+      }
     };
 
     const animate = () => {
@@ -44,11 +52,17 @@ const CustomCursor = () => {
       }
     };
 
-    const onLeave = () => setVisible(false);
-    const onEnter = () => setVisible(true);
+    const onLeave = () => {
+      shown = false;
+      setVisible(false);
+    };
+    const onEnter = () => {
+      shown = true;
+      setVisible(true);
+    };
 
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseover", handleOver);
+    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("mouseover", handleOver, { passive: true });
     document.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseenter", onEnter);
 
@@ -62,7 +76,9 @@ const CustomCursor = () => {
       document.removeEventListener("mouseenter", onEnter);
       document.body.style.cursor = "";
     };
-  }, [visible]);
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   return (
     <>

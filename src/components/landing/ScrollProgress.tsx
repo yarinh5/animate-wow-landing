@@ -1,16 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { isLiteDevice } from "@/lib/motion";
 
-gsap.registerPlugin(ScrollTrigger);
-
+/** Desktop-only top progress bar */
 const ScrollProgress = () => {
   const progressRef = useRef<HTMLDivElement>(null);
+  const [enabled] = useState(() => !isLiteDevice());
 
   useEffect(() => {
-    if (!progressRef.current) return;
-
-    gsap.to(progressRef.current, {
+    if (!enabled || !progressRef.current) return;
+    const tween = gsap.to(progressRef.current, {
       scaleX: 1,
       ease: "none",
       scrollTrigger: {
@@ -20,10 +19,16 @@ const ScrollProgress = () => {
         scrub: 0.3,
       },
     });
-  }, []);
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-1 z-[60] bg-transparent">
+    <div className="fixed top-0 left-0 right-0 h-1 z-[60] bg-transparent hidden md:block">
       <div
         ref={progressRef}
         className="h-full bg-gradient-to-r from-primary via-secondary to-accent origin-left"

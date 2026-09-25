@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { Award, Clock, CheckCircle, Rocket, Star, Sparkles } from "lucide-react";
+import { MM_CONDITIONS, liteReveal, listen } from "@/lib/motion";
 import { TextScramble } from "@/components/landing/TextScramble";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -26,7 +27,16 @@ const AboutSection = ({ onContactClick }: AboutSectionProps) => {
   const floatingElementsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia(sectionRef);
+    mm.add(MM_CONDITIONS, (context) => {
+      const { isDesktop, reduce } = context.conditions as { isDesktop: boolean; reduce: boolean };
+      if (reduce) return;
+      if (!isDesktop) {
+        // Mobile/touch: one light, once-only reveal per block
+        liteReveal([contentRef.current, imageRef.current, ...Array.from(statsRef.current?.querySelectorAll(".stat-item") ?? [])].filter(Boolean) as Element[]);
+        return;
+      }
+      const cleanups: (() => void)[] = [];
       // Content animation with dramatic slide
       gsap.fromTo(
         contentRef.current,
@@ -180,9 +190,10 @@ const AboutSection = ({ onContactClick }: AboutSectionProps) => {
         ease: "none",
       });
 
-    }, sectionRef);
+      return () => cleanups.forEach((c) => c());
+    });
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   return (

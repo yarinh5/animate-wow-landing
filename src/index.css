@@ -112,14 +112,30 @@
     @apply border-border;
   }
 
+  /* No global scroll-behavior: smooth — Lenis (desktop) or explicit smooth scrollIntoView (mobile) handle it */
   html {
-    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     @apply bg-background text-foreground font-body antialiased;
     background: var(--gradient-hero);
     min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  @supports (overflow: clip) {
+    html, body { overflow-x: clip; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -165,6 +181,23 @@
     background: hsl(var(--card) / 0.6);
     backdrop-filter: blur(20px);
     border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  .hero-min-h {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  /* Mobile/touch: kill expensive backdrop blur and heavy glows */
+  @media (max-width: 767px), (pointer: coarse) {
+    .glass {
+      background: hsl(var(--background) / 0.95);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    .pulse-glow, .floating {
+      animation: none;
+    }
   }
 
   .gradient-border {
