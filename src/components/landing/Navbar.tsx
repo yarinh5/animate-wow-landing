@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import gsap from "gsap";
+import { scrollToSection as goToSection } from "@/lib/motion";
 
 interface NavbarProps {
   onContactClick: () => void;
@@ -19,28 +20,34 @@ const Navbar = ({ onContactClick }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 50);
+        ticking = false;
+      });
     };
-
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    gsap.fromTo(
+    const tween = gsap.fromTo(
       ".nav-item",
       { opacity: 0, y: -20 },
       { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, delay: 0.3 }
     );
+    return () => {
+      tween.kill();
+    };
   }, []);
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
     setIsMobileMenuOpen(false);
+    goToSection(href);
   };
 
   return (
@@ -56,7 +63,7 @@ const Navbar = ({ onContactClick }: NavbarProps) => {
           className="nav-item text-2xl font-display font-bold text-gradient"
           onClick={(e) => {
             e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            goToSection("top");
           }}
         >
           YH
