@@ -1,37 +1,34 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { isLiteDevice, prefersReducedMotion } from "@/lib/motion";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-/** Desktop-only decorative parallax layer (not rendered on mobile/touch) */
+gsap.registerPlugin(ScrollTrigger);
+
 const FloatingShapes = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [enabled] = useState(() => !isLiteDevice() && !prefersReducedMotion());
 
   useEffect(() => {
-    if (!enabled || !containerRef.current) return;
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".parallax-shape").forEach((shape, i) => {
-        gsap.to(shape, {
-          y: gsap.utils.random(-150, 150),
-          x: gsap.utils.random(-50, 50),
-          rotation: gsap.utils.random(-90, 90),
-          ease: "none",
-          scrollTrigger: {
-            trigger: document.body,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1 + i * 0.3,
-          },
-        });
-      });
-    }, containerRef);
-    return () => ctx.revert();
-  }, [enabled]);
+    const shapes = containerRef.current?.querySelectorAll(".parallax-shape");
+    if (!shapes) return;
 
-  if (!enabled) return null;
+    shapes.forEach((shape, i) => {
+      gsap.to(shape, {
+        y: gsap.utils.random(-150, 150),
+        x: gsap.utils.random(-50, 50),
+        rotation: gsap.utils.random(-90, 90),
+        ease: "none",
+        scrollTrigger: {
+          trigger: document.body,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1 + i * 0.3,
+        },
+      });
+    });
+  }, []);
 
   return (
-    <div ref={containerRef} className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden md:block">
+    <div ref={containerRef} className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       <div className="parallax-shape absolute top-[15%] left-[8%] w-24 h-24 border border-primary/15 rounded-full" />
       <div className="parallax-shape absolute top-[35%] right-[10%] w-20 h-20 bg-secondary/10 rounded-lg rotate-45" />
       <div className="parallax-shape absolute top-[60%] left-[15%] w-16 h-16 border border-accent/15 rounded-full" />

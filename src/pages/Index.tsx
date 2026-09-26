@@ -12,12 +12,17 @@ import FloatingShapes from "@/components/landing/FloatingShapes";
 import Preloader from "@/components/landing/Preloader";
 import CustomCursor from "@/components/landing/CustomCursor";
 import SmoothScroll from "@/components/landing/SmoothScroll";
-import { scrollToSection } from "@/lib/motion";
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
 
-  const scrollToContact = () => scrollToSection("contact");
+  const scrollToContact = () => {
+    const el = document.getElementById('contact');
+    if (!el) return;
+    const lenis = (window as unknown as { lenis?: { scrollTo: (t: HTMLElement) => void } }).lenis;
+    if (lenis) lenis.scrollTo(el);
+    else el.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <>

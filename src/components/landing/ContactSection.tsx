@@ -8,7 +8,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Send, Mail, Phone, MapPin, Loader2, Sparkles, MessageSquare } from "lucide-react";
 import { z } from "zod";
-import { MM_CONDITIONS, liteReveal, listen } from "@/lib/motion";
 import { TextScramble } from "@/components/landing/TextScramble";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -37,16 +36,7 @@ const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const mm = gsap.matchMedia(sectionRef);
-    mm.add(MM_CONDITIONS, (context) => {
-      const { isDesktop, reduce } = context.conditions as { isDesktop: boolean; reduce: boolean };
-      if (reduce) return;
-      if (!isDesktop) {
-        // Mobile/touch: one light, once-only reveal per block
-        liteReveal([titleRef.current, formRef.current, infoRef.current].filter(Boolean) as Element[]);
-        return;
-      }
-      const cleanups: (() => void)[] = [];
+    const ctx = gsap.context(() => {
       // Title animation
       gsap.fromTo(
         titleRef.current,
@@ -145,7 +135,7 @@ const ContactSection = () => {
         );
 
         // Hover animation
-        listen(cleanups, item, "mouseenter", () => {
+        item.addEventListener("mouseenter", () => {
           gsap.to(item, {
             x: -10,
             scale: 1.02,
@@ -159,7 +149,7 @@ const ContactSection = () => {
           });
         });
 
-        listen(cleanups, item, "mouseleave", () => {
+        item.addEventListener("mouseleave", () => {
           gsap.to(item, {
             x: 0,
             scale: 1,
@@ -174,10 +164,9 @@ const ContactSection = () => {
         });
       });
 
-      return () => cleanups.forEach((c) => c());
-    });
+    }, sectionRef);
 
-    return () => mm.revert();
+    return () => ctx.revert();
   }, []);
 
   const handleChange = (

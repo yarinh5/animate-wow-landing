@@ -3,7 +3,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { Award, Clock, CheckCircle, Rocket, Star, Sparkles } from "lucide-react";
-import { MM_CONDITIONS, liteReveal, listen } from "@/lib/motion";
 import { TextScramble } from "@/components/landing/TextScramble";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -27,16 +26,7 @@ const AboutSection = ({ onContactClick }: AboutSectionProps) => {
   const floatingElementsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const mm = gsap.matchMedia(sectionRef);
-    mm.add(MM_CONDITIONS, (context) => {
-      const { isDesktop, reduce } = context.conditions as { isDesktop: boolean; reduce: boolean };
-      if (reduce) return;
-      if (!isDesktop) {
-        // Mobile/touch: one light, once-only reveal per block
-        liteReveal([contentRef.current, imageRef.current, ...Array.from(statsRef.current?.querySelectorAll(".stat-item") ?? [])].filter(Boolean) as Element[]);
-        return;
-      }
-      const cleanups: (() => void)[] = [];
+    const ctx = gsap.context(() => {
       // Content animation with dramatic slide
       gsap.fromTo(
         contentRef.current,
@@ -190,10 +180,9 @@ const AboutSection = ({ onContactClick }: AboutSectionProps) => {
         ease: "none",
       });
 
-      return () => cleanups.forEach((c) => c());
-    });
+    }, sectionRef);
 
-    return () => mm.revert();
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -219,7 +208,7 @@ const AboutSection = ({ onContactClick }: AboutSectionProps) => {
               מביא את <span className="text-gradient">החזון שלך</span> לחיים
             </h2>
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              אני ירין חזן, מפתח ומעצב דיגיטלי עם תשוקה ליצירת חוויות משתמש מדהימות. 
+              אני יארין חזן, מפתח ומעצב דיגיטלי עם תשוקה ליצירת חוויות משתמש מדהימות. 
               מתמחה בפיתוח דפי נחיתה שממירים, אתרים מקצועיים, אוטומציות חכמות ומערכות CRM.
             </p>
             <p className="text-lg text-muted-foreground mb-10 leading-relaxed">

@@ -3,7 +3,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { Code, Globe, Zap, Users, ArrowLeft, Sparkles } from "lucide-react";
-import { MM_CONDITIONS, liteReveal, listen } from "@/lib/motion";
 import { TextScramble } from "@/components/landing/TextScramble";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -50,16 +49,7 @@ const ServicesSection = ({ onContactClick }: ServicesSectionProps) => {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const mm = gsap.matchMedia(sectionRef);
-    mm.add(MM_CONDITIONS, (context) => {
-      const { isDesktop, reduce } = context.conditions as { isDesktop: boolean; reduce: boolean };
-      if (reduce) return;
-      if (!isDesktop) {
-        // Mobile/touch: one light, once-only reveal per block
-        liteReveal([titleRef.current, ...cardsRef.current].filter(Boolean) as Element[]);
-        return;
-      }
-      const cleanups: (() => void)[] = [];
+    const ctx = gsap.context(() => {
       // Parallax background
       gsap.to(backgroundRef.current, {
         y: -100,
@@ -176,7 +166,7 @@ const ServicesSection = ({ onContactClick }: ServicesSectionProps) => {
         );
 
         // Hover effect with GSAP - more dramatic
-        listen(cleanups, card, "mouseenter", () => {
+        card.addEventListener("mouseenter", () => {
           gsap.to(card, {
             scale: 1.05,
             y: -20,
@@ -198,7 +188,7 @@ const ServicesSection = ({ onContactClick }: ServicesSectionProps) => {
           });
         });
 
-        listen(cleanups, card, "mouseleave", () => {
+        card.addEventListener("mouseleave", () => {
           gsap.to(card, {
             scale: 1,
             y: 0,
@@ -220,10 +210,9 @@ const ServicesSection = ({ onContactClick }: ServicesSectionProps) => {
           });
         });
       });
-      return () => cleanups.forEach((c) => c());
-    });
+    }, sectionRef);
 
-    return () => mm.revert();
+    return () => ctx.revert();
   }, []);
 
   return (

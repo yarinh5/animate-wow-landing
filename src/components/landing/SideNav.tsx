@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { isLiteDevice, scrollToSection } from "@/lib/motion";
 
 const sections = [
   { id: "services", label: "שירותים" },
@@ -8,54 +7,48 @@ const sections = [
   { id: "contact", label: "צור קשר" },
 ];
 
-/** Desktop-only dot navigation, driven by IntersectionObserver (no layout reads on scroll) */
 const SideNav = () => {
-  const [enabled] = useState(() => !isLiteDevice());
   const [activeSection, setActiveSection] = useState("");
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!enabled) return;
+    const handleScroll = () => {
+      setVisible(window.scrollY > window.innerHeight * 0.5);
 
-    const activeObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      { rootMargin: "-40% 0px -59% 0px" }
-    );
-    sections.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) activeObserver.observe(el);
-    });
-
-    // Visible once the hero is mostly scrolled past
-    const hero = document.querySelector("section");
-    const heroObserver = new IntersectionObserver(
-      ([entry]) => setVisible(!entry.isIntersecting),
-      { rootMargin: "-50% 0px 0px 0px" }
-    );
-    if (hero) heroObserver.observe(hero);
-
-    return () => {
-      activeObserver.disconnect();
-      heroObserver.disconnect();
+      for (const section of sections) {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= window.innerHeight * 0.4 && rect.bottom >= window.innerHeight * 0.4) {
+            setActiveSection(section.id);
+            break;
+          }
+        }
+      }
     };
-  }, [enabled]);
 
-  if (!enabled) return null;
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const lenis = (window as unknown as { lenis?: { scrollTo: (t: HTMLElement) => void } }).lenis;
+    if (lenis) lenis.scrollTo(el);
+    else el.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <nav
-      className={`fixed right-4 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-4 transition-all duration-500 ${
+      className={`fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 transition-all duration-500 ${
         visible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8 pointer-events-none"
       }`}
     >
       {sections.map((section) => (
         <button
           key={section.id}
-          onClick={() => scrollToSection(section.id)}
+          onClick={() => scrollTo(section.id)}
           className="group relative flex items-center gap-3"
           aria-label={section.label}
         >

@@ -1,34 +1,27 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
-import "lenis/dist/lenis.css";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { isLiteDevice, prefersReducedMotion } from "@/lib/motion";
 
-/** Lenis on desktop only. Mobile/touch keeps 100% native browser scrolling. */
 const SmoothScroll = () => {
   useEffect(() => {
-    if (isLiteDevice() || prefersReducedMotion()) return;
-
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
-    const w = window as unknown as { lenis?: Lenis };
-    w.lenis = lenis;
 
-    lenis.on("scroll", ScrollTrigger.update);
-    const tick = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
+    // Expose globally so smooth in-page anchors work with existing scrollIntoView calls
+    (window as unknown as { lenis: Lenis }).lenis = lenis;
+
+    let rafId: number;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    };
+    rafId = requestAnimationFrame(raf);
 
     return () => {
-      gsap.ticker.remove(tick);
-      gsap.ticker.lagSmoothing(500, 33);
-      lenis.off("scroll", ScrollTrigger.update);
+      cancelAnimationFrame(rafId);
       lenis.destroy();
-      delete w.lenis;
     };
   }, []);
 

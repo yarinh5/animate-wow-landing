@@ -14,24 +14,11 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Lock page scroll while the preloader is visible, restore original value after
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const restore = () => {
-      document.body.style.overflow = prevOverflow;
-    };
-    let timeoutId: ReturnType<typeof setTimeout>;
-
     const tl = gsap.timeline({
       onComplete: () => {
-        restore();
-        timeoutId = setTimeout(onComplete, 200);
+        setTimeout(onComplete, 200);
       },
     });
-    const lite = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) tl.timeScale(4);
-    else if (lite) tl.timeScale(1.5);
 
     // Initial state
     gsap.set([yRef.current, hRef.current], { opacity: 0, y: 40, scale: 0.5 });
@@ -116,8 +103,6 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
 
     return () => {
       tl.kill();
-      clearTimeout(timeoutId);
-      restore();
     };
   }, [onComplete]);
 

@@ -3,7 +3,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Code2, Smartphone, Palette, Sparkles, Layers } from "lucide-react";
-import { MM_CONDITIONS, liteReveal, listen } from "@/lib/motion";
 import { TextScramble } from "@/components/landing/TextScramble";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -54,16 +53,7 @@ const PortfolioSection = ({ onContactClick }: PortfolioSectionProps) => {
   const ctaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const mm = gsap.matchMedia(sectionRef);
-    mm.add(MM_CONDITIONS, (context) => {
-      const { isDesktop, reduce } = context.conditions as { isDesktop: boolean; reduce: boolean };
-      if (reduce) return;
-      if (!isDesktop) {
-        // Mobile/touch: one light, once-only reveal per block
-        liteReveal([titleRef.current, ...projectsRef.current, ctaRef.current].filter(Boolean) as Element[]);
-        return;
-      }
-      const cleanups: (() => void)[] = [];
+    const ctx = gsap.context(() => {
       // Title animation with dramatic reveal
       gsap.fromTo(
         titleRef.current,
@@ -159,7 +149,7 @@ const PortfolioSection = ({ onContactClick }: PortfolioSectionProps) => {
         );
 
         // 3D tilt effect on hover
-        listen(cleanups, project, "mousemove", (e) => {
+        project.addEventListener("mousemove", (e) => {
           const rect = project.getBoundingClientRect();
           const x = (e.clientX - rect.left) / rect.width - 0.5;
           const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -182,7 +172,7 @@ const PortfolioSection = ({ onContactClick }: PortfolioSectionProps) => {
           });
         });
 
-        listen(cleanups, project, "mouseleave", () => {
+        project.addEventListener("mouseleave", () => {
           gsap.to(project, {
             rotateY: 0,
             rotateX: 0,
@@ -218,10 +208,9 @@ const PortfolioSection = ({ onContactClick }: PortfolioSectionProps) => {
         }
       );
 
-      return () => cleanups.forEach((c) => c());
-    });
+    }, sectionRef);
 
-    return () => mm.revert();
+    return () => ctx.revert();
   }, []);
 
   return (
