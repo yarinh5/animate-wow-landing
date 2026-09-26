@@ -4,7 +4,7 @@ import { DESKTOP_QUERY, HOVER_QUERY, LITE_QUERY, isLiteDevice, listen, prefersRe
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Sparkles, Star, Zap, Code } from "lucide-react";
 
-const TITLE = "יארין חזן";
+const TITLE = "ירין חזן";
 
 interface HeroSectionProps {
   onContactClick: () => void;

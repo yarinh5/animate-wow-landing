@@ -219,7 +219,7 @@ const AboutSection = ({ onContactClick }: AboutSectionProps) => {
               מביא את <span className="text-gradient">החזון שלך</span> לחיים
             </h2>
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              אני יארין חזן, מפתח ומעצב דיגיטלי עם תשוקה ליצירת חוויות משתמש מדהימות. 
+              אני ירין חזן, מפתח ומעצב דיגיטלי עם תשוקה ליצירת חוויות משתמש מדהימות. 
               מתמחה בפיתוח דפי נחיתה שממירים, אתרים מקצועיים, אוטומציות חכמות ומערכות CRM.
             </p>
             <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
