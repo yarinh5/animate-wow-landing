@@ -157,7 +157,7 @@ const HeroSection = ({ onContactClick }: HeroSectionProps) => {
           {lite
             ? TITLE
             : TITLE.split("").map((c, i) => (
-                <span key={i} className="hero-char inline-block transform-gpu">{c === " " ? "\u00A0" : c}</span>
+                <span key={i} className="hero-char inline-block transform-gpu text-gradient">{c === " " ? "\u00A0" : c}</span>
               ))}
         </h1>
 
