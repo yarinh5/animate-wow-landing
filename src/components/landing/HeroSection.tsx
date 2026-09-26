@@ -125,15 +125,8 @@ const HeroSection = ({ onContactClick }: HeroSectionProps) => {
 
       {/* Floating particles with glow */}
       <div ref={particlesRef} className="absolute inset-0 pointer-events-none">
-        {[...Array(30)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-primary rounded-full shadow-lg shadow-primary/50"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-          />
+        {particlePositions.map((pos, i) => (
+          <div key={i} className="absolute w-2 h-2 bg-primary rounded-full shadow-lg shadow-primary/50" style={pos} />
         ))}
       </div>
 
