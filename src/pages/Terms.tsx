@@ -25,7 +25,7 @@ const Terms = () => {
           <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">זכויות יוצרים</h2>
           <p>
             כל התכנים באתר, לרבות טקסטים, עיצובים, גרפיקה וקוד, 
-            הינם קניינו הבלעדי של יארין חזן ומוגנים בזכויות יוצרים.
+            הינם קניינו הבלעדי של ירין חזן ומוגנים בזכויות יוצרים.
           </p>
 
           <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">שימוש מותר</h2>
