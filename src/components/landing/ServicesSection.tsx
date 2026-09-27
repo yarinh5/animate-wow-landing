@@ -50,6 +50,33 @@ const ServicesSection = ({ onContactClick }: ServicesSectionProps) => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Keep the same presentation on touch screens, but avoid overlapping
+      // parallax, 3D and nested card tweens while the browser is scrolling.
+      if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+        const title = titleRef.current?.querySelector("h2");
+        if (title) {
+          gsap.fromTo(title, { autoAlpha: 0, y: 24 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.55,
+            ease: "power2.out",
+            scrollTrigger: { trigger: titleRef.current, start: "top 92%", once: true },
+          });
+        }
+
+        cardsRef.current.forEach((card) => {
+          if (!card) return;
+          gsap.fromTo(card, { autoAlpha: 0, y: 24 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.55,
+            ease: "power2.out",
+            scrollTrigger: { trigger: card, start: "top 92%", once: true },
+          });
+        });
+        return;
+      }
+
       // Parallax background
       gsap.to(backgroundRef.current, {
         y: -100,
