@@ -203,3 +203,11 @@
     50% { box-shadow: 0 0 40px hsl(180 100% 50% / 0.6); }
   }
 }
+
+/* Mobile scroll performance: lighter blur keeps the look but is far cheaper to paint */
+@media (max-width: 768px), (pointer: coarse) {
+  [class*="blur-["] { filter: blur(60px) !important; will-change: auto; }
+  .glass { backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important; }
+  .animate-pulse { animation-duration: 4s; }
+  html { -webkit-overflow-scrolling: touch; }
+}
