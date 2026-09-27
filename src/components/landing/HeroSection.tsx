@@ -202,17 +202,20 @@ const HeroSection = ({ onContactClick }: HeroSectionProps) => {
         }
       );
 
-      // Scroll-triggered parallax for background
-      gsap.to(".parallax-bg", {
-        y: 200,
-        ease: "none",
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
+      // Avoid repainting the large blurred background during the hero-to-services
+      // transition on touch devices; retain the parallax on desktop.
+      if (!window.matchMedia("(hover: none), (pointer: coarse)").matches) {
+        gsap.to(".parallax-bg", {
+          y: 200,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
 
     }, heroRef);
 
