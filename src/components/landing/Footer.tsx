@@ -35,7 +35,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-border/50 pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} יארין חזן. כל הזכויות שמורות.
+          © {new Date().getFullYear()} ירין חזן. כל הזכויות שמורות.
         </div>
       </div>
     </footer>
