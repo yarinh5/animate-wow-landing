@@ -50,17 +50,23 @@ const ServicesSection = ({ onContactClick }: ServicesSectionProps) => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Keep the same presentation on touch screens, but avoid overlapping
-      // parallax, 3D and nested card tweens while the browser is scrolling.
+      // Keep the heading tied to the scroll position on touch screens, while
+      // avoiding the expensive blur and 3D effects used on desktop.
       if (window.matchMedia("(hover: none), (pointer: coarse)").matches) {
         const title = titleRef.current?.querySelector("h2");
         if (title) {
-          gsap.fromTo(title, { autoAlpha: 0, y: 24 }, {
+          gsap.fromTo(title, { autoAlpha: 0, y: 40, scale: 0.92, rotation: 3 }, {
             autoAlpha: 1,
             y: 0,
-            duration: 0.55,
-            ease: "power2.out",
-            scrollTrigger: { trigger: titleRef.current, start: "top 92%", once: true },
+            scale: 1,
+            rotation: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: titleRef.current,
+              start: "top 95%",
+              end: "top 63%",
+              scrub: true,
+            },
           });
         }
 
